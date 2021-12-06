@@ -21,4 +21,4 @@ XAMPP - https://www.apachefriends.org/download.html
 
 Using [XAMPP](https://www.apachefriends.org/download.html) to host the website locally at localhost/PI/CPC68
 
-*VERY FIRST WEBSITE I CREATED, NOT EXACTLY FINISHED, BUT RIGHT NOW THERE'S NO POINT IN CONTINUING IT*
+*VERY FIRST WEBSITE I CREATED ALONE, NOT EXACTLY FINISHED, BUT RIGHT NOW THERE'S NO POINT IN CONTINUING IT*
