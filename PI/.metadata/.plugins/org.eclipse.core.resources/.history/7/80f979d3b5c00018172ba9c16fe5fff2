@@ -1,0 +1,95 @@
+<?php
+use src\AtivoRepositorio;
+
+session_start();
+include_once 'src/AtivoRepositorio.php';
+
+if (! isset($_SESSION['logou']) || $_SESSION['logou'] != TRUE) {
+    header('Location: index.php');
+} else {
+    ?>
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Alteração Ativo - CPC68</title>
+	<link rel="stylesheet" href="style.css"> <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+
+<!-- HEADER -->
+<?php include_once 'includes/header.php';?>
+
+
+<!-- NAV -->
+<?php include_once 'includes/nav.php';?>
+
+
+<!-- Side Menu -->
+<?php include_once 'includes/sideMenu.php';?>
+    
+    
+    <!-- Main -->
+	<div id="main">
+		<div class="mainContainer">
+    		<div class="mainConteudo">
+    			<form action="alterarAtivo2.php" method="post">
+    				<div class="botoes">
+                		<a href="telaPrincipal.php" class="btVoltar"><img src="img/arrow_left.png" alt="">Voltar</a>
+            			<input type="text" name="pesquisa" size="60" placeholder="Pesquisar o ativo por código de barras" required> <button class="btPesquisar" type="submit" value="Pesquisar"><img alt="" src="img/magnifier.png"></button>
+                		<p>
+                			<?php if ($_SESSION['resultado'] == 1){
+            				    if ($_SESSION['nivel'] == 1 || $_SESSION['nivel'] == 2) {
+            				    echo "<label class='resultado1'>Ativo não encontrado.</label>";
+            				    } else {
+            				    echo "<label class='resultado1'>Ativo não encontrado ou bloqueado.</label>";
+            				    }
+                                $_SESSION['resultado'] = -1;
+            				}?>
+                		</p>
+            		</div>
+    			</form>
+    			<?php
+    			$AtivoRepositorio = new AtivoRepositorio();
+    			
+    			if ($_SESSION['nivel'] == 1 || $_SESSION['nivel'] == 2) {
+                    $quantidadeAtivo = $AtivoRepositorio->contarAtivo();    			    
+    			    $listaAtivo = $AtivoRepositorio->listarAtivo();
+    			}
+    			?>
+    			<table>
+            		<tr>
+            			<td style="color: #fca235; font-weight: bold;">Nome</td>
+            			<td style="color: #fca235; font-weight: bold;">Data de registro</td>
+            			<td style="color: #fca235; font-weight: bold;">Codigo de barras</td>
+                        <td style="color: #fca235; font-weight: bold;">Ambiente</td>
+            		</tr>
+            		<?php
+            		$c = 0;
+            		while ($c < $quantidadeAtivo) {
+                        echo "<tr>";
+                        echo "<td><img alt='' src='img/bullet_go.png'>&nbsp;<a href='alterarAtivo2.php?pesquisa=" . $listaAtivo[$c]->getNome() . "'>" . $listaAtivo[$c]->getNome() ."</td>";
+                        echo "<td>&nbsp;" . date('d/m/Y - H:i',strtotime($listaAtivo[$c]->getDtRegistro())) . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $listaAtivo[$c]->getCodigoBarra() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $listaAtivo[$c]->getAmbiente()->getNome() . "&nbsp;</td>";
+                        echo "</tr>";
+                        $c++;
+            		}
+                    ?>
+    			</table>
+    		</div>
+    	</div>
+	</div>
+	
+<!-- Footer -->
+<?php include_once 'includes/footer.php';?>
+
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
+<?php 
+}
+?>

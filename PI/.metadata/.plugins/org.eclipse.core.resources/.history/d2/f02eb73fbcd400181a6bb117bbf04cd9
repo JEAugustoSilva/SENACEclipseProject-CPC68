@@ -1,0 +1,31 @@
+<?php
+use src\Ativo;
+use src\Subgrupo;
+use src\AtivoRepositorio;
+
+session_start();
+include_once 'src/Ativo.php';
+include_once 'src/AtivoRepositorio.php';
+include_once 'src/Subgrupo.php';
+
+$Movimentacao->getAtivo() = new Ativo();
+$Movimentacao->getAtivo()->setId($_POST['id']);
+
+$Subgrupo = new Subgrupo();
+$Subgrupo->setId($_POST['idSubgrupo']);
+$Movimentacao->getAtivo()->setSubgrupo($Subgrupo);
+
+$Movimentacao->getAtivo()->setNome($_POST['nome']);
+$Movimentacao->getAtivo()->setDescricao($_POST['descricao']);
+$Movimentacao->getAtivo()->setCodigoBarra($_POST['codigoBarra']);
+
+$AtivoRepositorio = new AtivoRepositorio();
+$retorno = $AtivoRepositorio->alterarAtivo($Movimentacao->getAtivo());
+
+if ($retorno == TRUE) {
+    $_SESSION['resultado'] = 0;
+    header('Location: alterarAtivo2.php?pesquisa=' . $_POST['codigoBarra'] . '&idUnidade=' . $_POST['idUnidade'] . '&nomeUnidade=' . $_POST['nomeUnidade']);
+} else {
+    $_SESSION['resultado'] = 1;
+    header('Location: alterarAtivo2.php?pesquisa=' . $_POST['codigoBarra'] . '&idUnidade=' . $_POST['idUnidade'] . '&nomeUnidade=' . $_POST['nomeUnidade']);
+}

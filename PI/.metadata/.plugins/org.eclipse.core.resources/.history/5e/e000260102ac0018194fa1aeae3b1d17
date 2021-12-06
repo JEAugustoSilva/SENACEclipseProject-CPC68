@@ -1,0 +1,203 @@
+<?php 
+session_start();
+
+if (! isset($_SESSION['logou']) || $_SESSION['logou'] != TRUE) {
+    header('Location: index.php');
+} else {
+?>
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>CPC68</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header class="header">
+			<span style="color: #000; padding-right: 25px;"><?php echo $_SESSION['nome']; ?>
+						<img src="img/profilepic.png" height="30" style="padding-left:20px; padding-right:20px;">
+						<a href='logout.php'>Logout</a></span>
+	</header>
+	<nav class="barraNav">
+		<span class="openSlide">
+			<a href="#" onclick="openSlideMenu()" style="padding: 16px 16px;">
+<!-- 				Usei SVG para "desenhar" os 3 tracinhos. -->
+				<svg width="30" height="30"> 
+					<path d="M0,5 30,5" stroke="#fff" stroke-width="5"/>
+					<path d="M0,14 30,14" stroke="#fff" stroke-width="5"/>
+					<path d="M0,23 30,23" stroke="#fff" stroke-width="5"/>
+				</svg>
+			</a>
+		</span>
+		
+		<ul class="barraNav-links">
+			<li><a href="telaPrincipal.php">Home</a></li>
+			<li><a href="#">Contato</a></li>
+			<li><a href="#">Serviços</a></li>
+			<li><a href="#">Sobre</a></li>
+		</ul>
+	</nav>
+	<div id="sideMenu" class="sideNav">
+		<a href="#" class="btFechar" onclick="closeSlideMenu()">
+<!-- 				SVG novamente para "desenhar" o botao de fechar -->
+			<svg width="30" height="30">
+				<path d="M0,14 15,5" stroke="#fff" stroke-width="5"/>
+				<path d="M0,14 30,14" stroke="#fff" stroke-width="5"/>
+				<path d="M0,23 30,23" stroke="#fff" stroke-width="5"/>
+			</svg>
+		</a>
+		<button class="btDropdown">Ativo <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="#">Cadastro</a>
+    		<a href="#">Alteração</a>
+    		<a href="#">Consulta</a>
+    		<a href="#">Bloqueio</a>
+    		<a href="#">Desbloqueio</a>
+    		<a href="#">Exclusão</a>
+  		</div>
+		<button class="btDropdown">Movimentação <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="#">Cadastro</a>
+    		<a href="#">Alteração</a>
+    		<a href="#">Consulta</a>
+    		<a href="#">Bloqueio</a>
+    		<a href="#">Desbloqueio</a>
+    		<a href="#">Exclusão</a>
+  		</div>
+		<button class="btDropdown">Funcionário <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="cadastrarFuncionario.php">Cadastro</a>
+    		<a href="#">Alteração</a>
+    		<a href="#">Consulta</a>
+    		<a href="#">Bloqueio</a>
+    		<a href="#">Desbloqueio</a>
+    		<a href="#">Exclusão</a>
+  		</div>
+		<button class="btDropdown">Cargo <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="cadastrarCargo.php">Cadastro</a>
+    		<a href="alterarCargo.php">Alteração</a>
+    		<a href="consultarCargo.php">Consultar</a>
+    		<a href="bloquearCargo.php">Bloquear</a>
+    		<a href="desbloquearCargo.php">Desbloquear</a>
+    		<a href="excluirCargo.php">Excluir</a>
+  		</div>
+		<button class="btDropdown">Ambiente <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="cadastrarAmbiente.php">Cadastro</a>
+    		<a href="alterarAmbiente.php">Alteração</a>
+    		<a href="#">Consulta</a>
+    		<a href="#">Bloqueio</a>
+    		<a href="#">Desbloqueio</a>
+    		<a href="#">Exclusão</a>
+  		</div>
+		<button class="btDropdown">Unidade <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="cadastrarUnidade.php">Cadastro</a>
+    		<a href="alterarUnidade.php">Alteração</a>
+    		<a href="consultarUnidade.php">Consultar</a>
+    		<a href="bloquearUnidade.php">Bloquear</a>
+    		<a href="desbloquearUnidade.php">Desbloquear</a>
+    		<a href="excluirUnidade.php">Excluir</a>
+  		</div>
+		<button class="btDropdown">Grupo <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="cadastrarGrupo.php">Cadastro</a>
+    		<a href="alterarGrupo.php">Alteração</a>
+    		<a href="consultarGrupo.php">Consulta</a>
+    		<a href="#">Bloqueio</a>
+    		<a href="#">Desbloqueio</a>
+    		<a href="#">Exclusão</a>
+  		</div>
+		<button class="btDropdown">Subgrupo <i class="arrow down"></i></button>
+		<div class="dropdown-container">
+    		<a href="#">Cadastro</a>
+    		<a href="#">Alteração</a>
+    		<a href="#">Consulta</a>
+    		<a href="#">Bloqueio</a>
+    		<a href="#">Desbloqueio</a>
+    		<a href="#">Exclusão</a>
+  		</div>
+	</div>
+	<div id="main" onclick="closeSlideMenu()">
+		<table>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h1>TELA PRINCIPAL</h1></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<footer class="footer">
+		<label>CPC68© - Controle de Patrimônio Core 68©<br/>Direitors autorais®</label><br/>
+	</footer>
+	<script>
+
+		// Abrindo o Side Menu
+		function openSlideMenu(){
+			document.getElementById('sideMenu').style.width = '250px';
+		}
+		// Fechando o Side Menu
+		function closeSlideMenu(){
+			document.getElementById('sideMenu').style.width = '0';
+		}
+
+		// Criando Drop down menus dentro do Side Menu
+		var dropdown = document.getElementsByClassName("btDropdown");
+		var i;
+
+		for (i = 0; i < dropdown.length; i++) {
+		  dropdown[i].addEventListener("click", function() {
+		    this.classList.toggle("active");
+		    var dropdownContent = this.nextElementSibling;
+		    if (dropdownContent.style.display === "block") {
+		      dropdownContent.style.display = "none";
+		    } else {
+		      dropdownContent.style.display = "block";
+		    }
+		  });
+		} 
+	</script>
+</body>
+</html>
+<?php 
+}
+?>

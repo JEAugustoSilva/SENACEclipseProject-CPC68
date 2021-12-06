@@ -1,0 +1,39 @@
+<?php
+session_start();
+include_once 'src/Grupo.php';
+include_once 'src/GrupoRepositorio.php';
+
+use src\Grupo;
+use src\GrupoRepositorio;
+
+?>
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>CPC68</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <?php 
+    $Grupo = new Grupo();
+    $Grupo->setNome($_POST['nome']);
+    $Grupo->setDescricao($_POST['descricao']);
+    $date = explode('-', $_POST['dtRegistro']);
+    $Grupo->setDtRegistro($date[2] . "/" . $date[1] . "/" . $date[0]);
+    
+    $GrupoRepositorio = new GrupoRepositorio();
+    $retorno = $GrupoRepositorio->cadastrarGrupo($Grupo);
+    
+    if ($retorno == TRUE) {
+        $_SESSION['resultado'] = TRUE;
+        header('Location: cadastrarGrupo.php?');
+    } else {
+        header('Location: cadastrarGrupo.php?');
+    }
+    ?>
+    <p>
+    	<a href="telaPrincipal.php">Voltar</a>
+    </p>
+</body>
+</html>

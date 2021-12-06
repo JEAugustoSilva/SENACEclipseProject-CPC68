@@ -1,0 +1,37 @@
+eclipse.preferences.version=1
+fontPropagated=true
+java_bracket=232,226,183
+java_comment_task_tag=255,139,255
+java_default=224,226,228
+java_doc_default=125,140,147
+java_doc_keyword=160,130,189
+java_doc_link=103,140,177
+java_doc_tag=224,226,228
+java_keyword=178,148,187
+java_keyword_return=178,148,187
+java_multi_line_comment=125,140,147
+java_operator=232,226,183
+java_single_line_comment=125,140,147
+java_string=181,189,104
+org.eclipse.jface.textfont=1|Consolas|10.0|0|WINDOWS|1|0|0|0|0|0|0|0|0|1|0|0|0|0|Consolas;
+org.eclipse.wst.jsdt.internal.ui.navigator.layout=1
+org.eclipse.wst.jsdt.ui.editor.tab.width=
+org.eclipse.wst.jsdt.ui.formatterprofiles.version=11
+org.eclipse.wst.jsdt.ui.javadoclocations.migrated=true
+org.eclipse.wst.jsdt.ui.text.code_templates_migrated=true
+org.eclipse.wst.jsdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+org.eclipse.wst.jsdt.ui.text.custom_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+org.eclipse.wst.jsdt.ui.text.templates_migrated=true
+proposalOrderMigrated=true
+semanticHighlighting.localVariable.color=204,102,102
+semanticHighlighting.localVariable.italic=false
+semanticHighlighting.localVariableDeclaration.color=204,102,102
+semanticHighlighting.localVariableDeclaration.italic=false
+semanticHighlighting.methodDeclarationName.bold=true
+semanticHighlighting.methodDeclarationName.color=232,226,183
+semanticHighlighting.methodDeclarationName.enabled=true
+semanticHighlighting.methodDeclarationName.italic=false
+tabWidthPropagated=true
+tagName=129,162,190
+useAnnotationsPrefPage=true
+useQuickDiffPrefPage=true

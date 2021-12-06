@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Move &apos;cadastrarUnidade.php&apos; to &apos;CPC68&apos;" description="Move &apos;cadastrarUnidade.php&apos; to &apos;CPC68&apos;" destination="/CPC68" element1="unidade/cadastrarUnidade.php" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1539069542246" updateReferences="true"/>&#x0A;<refactoring comment="Move &apos;cadastrarUnidade.php&apos; to &apos;unidade&apos;" description="Move &apos;cadastrarUnidade.php&apos; to &apos;unidade&apos;" destination="unidade" element1="cadastrarUnidade.php" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="1" stamp="1539069589490" updateReferences="true"/>
+</session>

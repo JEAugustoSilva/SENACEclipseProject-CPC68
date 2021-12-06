@@ -1,0 +1,123 @@
+<?php
+session_start();
+
+include_once 'src/Ativo.php';
+include_once 'src/AtivoRepositorio.php';
+
+use src\Ativo;
+use src\AtivoRepositorio;
+
+if (! isset($_SESSION['logou']) || $_SESSION['logou'] != TRUE) {
+    header('Location: index.php');
+} else {
+    ?>
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Relátorio - Ativos Ausentes - CPC68</title>
+	<link rel="stylesheet" href="style.css"> <link rel="icon" type="image/png" href="favicon.png"> <script src="jquery-3.3.1.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<?php include_once 'includes/nav.php';?>
+
+
+<!-- Side Menu -->
+<?php include_once 'includes/sideMenu.php';?>
+
+
+    <!-- Main -->
+	<div id="main">
+        <div class="mainContainer">
+        	<div class="mainConteudo">
+                	<div class="botoes">
+                		<a href="rel.php" class="btVoltar"><img src="img/arrow_left.png" alt="">Voltar</a>
+                	</div>
+            	<?php
+            	$idUnidade = $_GET['idUnidade'];
+            	
+                $Ativo = new Ativo();
+                $AtivoRepositorio = new AtivoRepositorio();
+                
+                $listaAtivo = $AtivoRepositorio->relListarAtivosAusentes($idUnidade);
+                $quantidadeAtivo = $AtivoRepositorio->relContarAtivosAusentes($idUnidade);
+            	?>
+            	<table>
+            		<tr>
+            			<td colspan="5" style="color: #fca235; font-weight: bold; font-size:20px;">Relatório - Ativos Ausentes em <?php echo $listaAtivo[0]->getAmbiente()->getUnidade()->getNome();?></td>
+            		</tr>
+            		<tr>
+            			<td style="color: #fca235; font-weight: bold;">Nome</td>
+                        <td style="color: #fca235; font-weight: bold;">Tombamento</td>
+                        <td style="color: #fca235; font-weight: bold;">Subgrupo</td>
+                        <td style="color: #fca235; font-weight: bold;">Ambiente</td>
+                        <td style="color: #fca235; font-weight: bold;">Data de registro</td>
+                        <td style="color: #fca235; font-weight: bold;">Cadastrante</td>
+                        <td style="color: #fca235; font-weight: bold;">Status</td>
+            		</tr>
+            		<?php
+            		$c = 0;
+            		while ($c < $quantidadeAtivo) {
+            		    $Ativo = $listaAtivo[$c];
+                        echo "<tr>";
+                        if ($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2) {
+                            echo "<td style='padding-left: 40px;'>" . $Ativo->getNome() ."</td>";
+                        } else {
+                            echo "<td>&nbsp;" . $Ativo->getNome() ."</td>";
+                        }
+                        echo "<td>&nbsp;" . $Ativo->getCodigoBarra() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $Ativo->getSubgrupo()->getNome() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $Ativo->getAmbiente()->getNome() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $Ativo->getDtRegistro() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $Ativo->getAmbiente()->getNome() . "&nbsp;</td>";
+                        
+                        if ($Ativo->getStatus() == 0) {
+                            $status = 'OK';
+                            $cor = 'style="font-weight: bold; color: green;"';
+                        } else if ($Ativo->getStatus() == 1) {
+                            $status = "Em empréstimo";
+                            $cor = 'style="font-weight: bold; color: orange;"';
+                        } else if ($Ativo->getStatus() == 2) {
+                            $status = "Em ass. técnica";
+                            $cor = 'style="font-weight: bold; color: orange;"';
+                        } else if ($Ativo->getStatus() == 3) {
+                            $status = "Em baixa";
+                            $cor = 'style="font-weight: bold; color: red;"';
+                        } else if ($Ativo->getStatus() == 10) {
+                            $status = "Mal funcionamento";
+                            $cor = 'style="font-weight: bold; color: orange;"';
+                        } else if ($Ativo->getStatus() == 11) {
+                            $status = "Quebrado";
+                            $cor = 'style="font-weight: bold; color: red;"';
+                        } else if ($Ativo->getStatus() == 12) {
+                            $status = "Sem Tombamento";
+                            $cor = 'style="font-weight: bold; color: orange;"';
+                        } else if ($Ativo->getStatus() == 13) {
+                            $status = "Ausente";
+                            $cor = 'style="font-weight: bold; color: red;"';
+                        }
+                        echo "<td><span " . $cor . ">&nbsp;" . $status . "&nbsp;</span></td>";
+                        
+//                         echo "<td>&nbsp;" . date('d/m/Y - H:i',strtotime($Ativo->getDtRegistro())) . "&nbsp;</td>";
+                        echo "</tr>";
+                        $c++;
+            		}
+            		?>
+            	</table>
+			</div>
+		</div>
+	</div>
+	
+<!-- Footer -->
+<?php include_once 'includes/footer.php';?>
+
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
+<?php 
+}
+?>

@@ -1,0 +1,54 @@
+<?php
+session_start();
+
+include_once 'src/Grupo.php';
+include_once 'src/GrupoRepositorio.php';
+
+use src\Grupo;
+use src\GrupoRepositorio;
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CPC68</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<h3>Consultar Grupo</h3>
+	<form action="consultarGrupo2.php" method="post">
+		<div class="botoes">
+			<p>
+				<input type="text" name="nome" size="60" required> <button class="btPesquisar" type="submit" value="Pesquisar"><img alt="" src="img/magnifier.png"></button>
+			</p>
+		</div>
+	</form>
+<?php 
+    $Grupo = new Grupo();
+    $GrupoRepositorio = new GrupoRepositorio();
+    
+    if ($_SESSION['nivel'] == 1 || $_SESSION['nivel'] == 2) {
+        $quantidade = $GrupoRepositorio->contarTodoGrupo();
+        $listaGrupo = $GrupoRepositorio->listarTodoGrupo();
+    } else {
+        $quantidade = $GrupoRepositorio->contarGrupoDesbloqueado();
+        $listaGrupo = $GrupoRepositorio->listarGrupoDesbloqueado();
+    }
+?>
+
+	<table border="1" >
+		<tr>
+			<?php 
+			$c= 0;
+			while ($c < $quantidade) {
+			    $Grupo = $listaGrupo[$c];
+			    echo "<tr>";
+			    echo "<td align='center'>&nbsp;<a href='consultarGrupo2.php?nome=" . $Grupo->getNome() . "'>" . $Grupo->getNome() . "&nbsp;</td>";
+			    echo "</tr>";
+			    $c++;
+			}
+			?>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="PHPSourceActionDialog.methods">
+		<item value="2" key="PHPSourceActionDialog.InsertPosition"/>
+		<item value="64" key="PHPSourceActionDialog.VisibilityModifier"/>
+		<item value="false" key="PHPSourceActionDialog.FinalModifier"/>
+		<item value="false" key="GettersSettersDialog.sortorder"/>
+		<item value="false" key="PHPSourceActionDialog.Comments"/>
+	</section>
+	<section name="completion_proposal_size">
+		<item value="254" key="size.y"/>
+		<item value="355" key="size.x"/>
+	</section>
+	<section name="quick_outline_size">
+	</section>
+</section>

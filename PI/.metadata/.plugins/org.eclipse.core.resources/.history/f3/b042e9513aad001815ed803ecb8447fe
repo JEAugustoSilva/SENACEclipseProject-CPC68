@@ -1,0 +1,68 @@
+<?php
+session_start();
+
+include_once 'src/Cargo.php';
+include_once 'src/CargoRepositorio.php';
+
+use src\Cargo;
+use src\CargoRepositorio;
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CPC68</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<?php
+    if ($_SERVER['REQUEST_METHOD'] == "GET") {
+        $nome = $_GET['nome'];
+    } else {
+        $nome = $_POST['nome'];
+    }
+    $Cargo = new Cargo();
+    $Cargo->setNome($nome);
+    $CargoRepositorio = new CargoRepositorio();
+    
+    if ($nome != "") {
+        $Cargo = $CargoRepositorio->consultarCargo($Cargo);
+    }
+    
+    if ($Cargo->getId() != "") {
+        ?>
+			<p>
+        		<label>Nome:</label> <input readonly type="text" name="nome" size="60" value="<?php echo $Cargo->getNome();?>">
+        	</p>
+        	<p>
+        		<label>Descrição:</label><br/>
+        		<textarea readonly name="descricao" rows="5" cols="52"><?php echo $Cargo->getDescricao();?></textarea>
+        	</p>
+        	<p>
+        		<label>Data de registro:</label> <input readonly type="text" size="7" name="dtRegistro" value="<?php echo $Cargo->getDtRegistro();?>">
+        	</p>
+        	<p class="botoes">
+       			<a href="consultarCargo.php" class="btVoltar"><img src="img/arrow_left.png" alt="">Voltar</a>
+       				<?php if ($_SESSION['nivel'] == 1 || $_SESSION['nivel'] == 2) {?>
+       					<?php if ($Cargo->getSituacao() != 0) {?>
+       						<a href="desbloquearCargo.php?id=<?php echo $Cargo->getId();?>&nome=<?php echo $Cargo->getNome();?>" class="btDesbloquear">
+       						<img src="img/report_add.png" alt="">Desbloquear
+       						</a>
+       					<?php } else {?>
+       						<a href="bloquearCargo.php?id=<?php echo $Cargo->getId();?>&nome=<?php echo $Cargo->getNome();?>" class="btBloquear">
+							<img src="img/report_delete.png" alt="">Bloquear
+							</a>
+       					<?php }
+                          }
+       					  if ($_SESSION['nivel'] == 1) {?>
+       						<a href="excluirCargo.php?id=<?php echo $Cargo->getId();?>&nome=<?php echo $Cargo->getNome();?>" class="btExcluir">
+							<img src="img/delete.png" alt="">Excluir
+							</a>
+					<?php }?>
+       					</p>
+<?php } else {
+        $_SESSION['resultado'] = 1;
+        header('Location: consultarCargo.php');
+      }?>
+</body>
+</html>

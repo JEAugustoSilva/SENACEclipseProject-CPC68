@@ -1,0 +1,132 @@
+<?php
+session_start();
+
+include_once 'src/Ativo.php';
+include_once 'src/AtivoRepositorio.php';
+include_once 'src/Movimentacao.php';
+include_once 'src/MovimentacaoRepositorio.php';
+
+use src\Ativo;
+use src\AtivoRepositorio;
+use src\Movimentacao;
+use src\MovimentacaoRepositorio;
+
+if (! isset($_SESSION['logou']) || $_SESSION['logou'] != TRUE) {
+    header('Location: index.php');
+} else {
+    ?>
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Alteração Movimentação - CPC68</title>
+	<link rel="stylesheet" href="style.css"> <link rel="icon" type="image/png" href="favicon.png"> <script src="jquery-3.3.1.js"></script>
+</head>
+<body>
+
+
+
+
+
+<!-- NAV -->
+<?php include_once 'includes/nav.php';?>
+
+
+<!-- Side Menu -->
+<?php include_once 'includes/sideMenu.php';?>
+
+
+    <!-- Main -->
+	<div id="main">
+        <div class="mainContainer">
+        	<div class="mainConteudo">
+				<form action="alterarMovimentacao2.php" method="post">
+                	<div class="botoes">
+                		<a href="telaPrincipal.php" class="btVoltar"><img src="img/arrow_left.png" alt="">Voltar</a>
+            			<input type="hidden" name="idUnidade" value="<?php echo $_GET['idUnidade'];?>">
+            			<input type="text" name="pesquisa" size="60" placeholder="Pesquisar movimentação pelo tombamento do ativo" required> <button class="btPesquisar" type="submit" value="Pesquisar"><img alt="" src="img/magnifier.png"></button>
+                	</div>
+    				<p>
+            			<?php if ($_SESSION['resultado'] == 1){
+        				    if ($_SESSION['nivel'] == 1 || $_SESSION['nivel'] == 2) {
+        				    echo "<label class='resultado1'>Ativo não encontrado.</label>";
+        				    } else {
+        				    echo "<label class='resultado1'>Ativo não encontrado ou bloqueado.</label>";
+        				    }
+                            $_SESSION['resultado'] = -1;
+        				}?>
+            		</p>
+            	</form>
+            	<?php
+                $idAmbiente = $_GET['idAmbiente'];
+                $nomeAmbiente = $_GET['nomeAmbiente'];
+                $idUnidade = $_GET['idUnidade'];
+                $nomeUnidade = $_GET['nomeUnidade'];
+                
+                $MovimentacaoRepositorio = new MovimentacaoRepositorio();
+                $listaMov = $MovimentacaoRepositorio->listarMovimentacaoPorAmbienteDesbloqueado($idAmbiente);
+                $quantidadeMov = $MovimentacaoRepositorio->contarMovimentacaoPorAmbienteDesbloqueado($idAmbiente);
+                
+            	?>
+            	<table>
+            		<tr>
+            			<td colspan="5" style="color: #fca235; font-weight: bold; font-size:20px;"><a href="alterarMovimentacao.php">Unidades</a> > <a href="alterarMovimentacao1-1.php?idUnidade=<?php echo $idUnidade;?>&nomeUnidade=<?php echo $nomeUnidade;?>">Ambientes</a> > Movimentações em <?php echo $nomeAmbiente;?></td>
+            		</tr>
+            		<tr>
+            			<td style="color: #fca235; font-weight: bold;">Tipo</td>
+                        <td style="color: #fca235; font-weight: bold;">Descrição</td>
+                        <td style="color: #fca235; font-weight: bold;">Ambiente Origem</td>
+                        <td style="color: #fca235; font-weight: bold;">Ambiente Destino</td>
+                        <td style="color: #fca235; font-weight: bold;">Data de registro</td>
+            		</tr>
+            		<?php
+            		$c = 0;
+            		while ($c < $quantidadeAtivo) {
+            		    $Ativo = $listaAtivo[$c];
+                        echo "<tr>";
+                        if ($Ativo->getStatus() == 1 || $Ativo->getStatus() == 2 || $Ativo->getStatus() == 3) {
+                            echo "<td style='padding-left: 40px;'>" . $Ativo->getNome() ."</td>";
+                        } else {
+                            echo "<td><img alt='' src='img/bullet_go.png'>&nbsp;<a href='alterarMovimentacao2.php?pesquisa=" . $Ativo->getCodigoBarra() . "&idUnidade=" . $idUnidade . "'>" . $Ativo->getNome() ."</td>";
+                        }
+                        echo "<td>&nbsp;" . $Ativo->getCodigoBarra() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . $Ativo->getDescricao() . "&nbsp;</td>";
+                        
+                        if ($Ativo->getStatus() == 0) {
+                            $status = 'OK';
+                        } else if ($Ativo->getStatus() == 1) {
+                            $status = "Em empréstimo";
+                        } else if ($Ativo->getStatus() == 2) {
+                            $status = "Em ass. técnica";
+                        } else if ($Ativo->getStatus() == 3) {
+                            $status = "Em baixa";
+                        } else if ($Ativo->getStatus() == 10) {
+                            $status = "Mal funcionamento";
+                        } else if ($Ativo->getStatus() == 11) {
+                            $status = "Quebrado";
+                        } else if ($Ativo->getStatus() == 12) {
+                            $status = "Sem Tombamento";
+                        }
+                        echo "<td>&nbsp;" . $status . "&nbsp;</td>";
+                        
+                        echo "<td>&nbsp;" . date('d/m/Y - H:i',strtotime($Ativo->getDtRegistro())) . "&nbsp;</td>";
+                        echo "</tr>";
+                        $c++;
+            		}
+            		?>
+            	</table>
+			</div>
+		</div>
+	</div>
+	
+<!-- Footer -->
+<?php include_once 'includes/footer.php';?>
+
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
+<?php 
+}
+?>

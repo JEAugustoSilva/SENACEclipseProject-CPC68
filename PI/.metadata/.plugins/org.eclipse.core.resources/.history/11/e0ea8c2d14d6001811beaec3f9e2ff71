@@ -1,0 +1,59 @@
+<div id="sideMenu" class="sideMenu">
+		<br/>
+	<button class="btDropdown">Ativo <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarAtivo.php">Cadastro</a>
+		<a href="alterarAtivo.php">Alteração</a>
+		<a href="consultarAtivo.php">Consulta</a>
+	</div>
+		<br/>
+	<button class="btDropdown">Movimentação <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="movimentacao1.php">Cadastro</a>
+		<a href="alterarMovimentacao.php">Alteração</a>
+		<a href="consultarMovimentacao.php">Consulta</a>
+	</div>
+		<br/>
+	<button class="btDropdown">Funcionário <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarFuncionario.php">Cadastro</a>
+		<a href="alterarFuncionario.php">Alteração</a>
+		<a href="consultarFuncionario.php">Consulta</a>
+	</div>
+		<br/>
+	<button class="btDropdown">Cargo <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarCargo.php">Cadastro</a>
+		<a href="alterarCargo.php">Alteração</a>
+		<a href="consultarCargo.php">Consulta</a>
+	</div>
+		<br/>
+	<button class="btDropdown">Ambiente <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarAmbiente.php">Cadastro</a>
+		<a href="alterarAmbiente.php">Alteração</a>
+		<a href="consultarAmbiente.php">Consulta</a>
+	</div>
+	<div></div>
+		<br/>
+	<button class="btDropdown">Unidade <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarUnidade.php">Cadastro</a>
+		<a href="alterarUnidade.php">Alteração</a>
+		<a href="consultarUnidade.php">Consulta</a>
+	</div>
+		<br/>
+	<button class="btDropdown">Grupo <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarGrupo.php">Cadastro</a>
+		<a href="alterarGrupo.php">Alteração</a>
+		<a href="consultarGrupo.php">Consulta</a>
+	</div>
+		<br/>
+	<button class="btDropdown">Subgrupo <i class="arrow down"></i></button>
+	<div class="dropdown-container">
+		<a href="cadastrarSubgrupo.php">Cadastro</a>
+		<a href="alterarSubgrupo.php">Alteração</a>
+		<a href="consultarSubgrupo.php">Consulta</a>
+	</div>
+</div>

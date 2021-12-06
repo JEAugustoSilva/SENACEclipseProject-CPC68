@@ -1,0 +1,37 @@
+<?php
+session_start();
+
+include_once 'src/Ativo.php';
+include_once 'src/AtivoRepositorio.php';
+include_once 'src/Funcionario.php';
+include_once 'src/FuncionarioRepositorio.php';
+
+use src\Ativo;
+use src\AtivoRepositorio;
+
+?>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CPC68</title>
+<link rel="stylesheet" href="style.css"> <link rel="icon" type="image/png" href="favicon.png"> <script src="jquery-3.3.1.js"></script>
+</head>
+<body>
+<?php
+    $Movimentacao->getAtivo() = new Ativo();
+    $Movimentacao->getAtivo()->setId($_GET['id']);
+    $Movimentacao->getAtivo()->setCodigoBarra($_GET['codigoBarra']);
+    $idUnidade = $_GET['idUnidade'];
+    $nomeUnidade = $_GET['nomeUnidade'];
+    $AtivoRepositorio = new AtivoRepositorio();
+    $retorno = $AtivoRepositorio->bloquearAtivo($Movimentacao->getAtivo());
+    if ($retorno == TRUE) {
+        header('Location: consultarAtivo2.php?pesquisa=' . $Movimentacao->getAtivo()->getCodigoBarra() . '&idUnidade=' . $idUnidade . '&nomeUnidade=' . $nomeUnidade);
+    } else {
+        echo "Falha no bloqueio!";
+        echo "<a href='consultarAtivo2.php?pesquisa=" . $Movimentacao->getAtivo()->getCodigoBarra() . "'>Voltar</a>";
+    }
+?>
+</body>
+</html>

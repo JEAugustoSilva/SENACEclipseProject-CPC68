@@ -1,0 +1,3 @@
+For future self.
+Made in Eclipse PHP, on a third "module" of SENAC - Técnico em Informática course, the best place I've been so far.
+Date course ended: 26/10/2018

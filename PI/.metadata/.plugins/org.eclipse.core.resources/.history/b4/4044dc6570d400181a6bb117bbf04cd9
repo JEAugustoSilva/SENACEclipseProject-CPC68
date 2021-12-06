@@ -1,0 +1,117 @@
+<?php
+session_start();
+
+include_once 'src/Ambiente.php';
+include_once 'src/AmbienteRepositorio.php';
+use src\Ambiente;
+use src\AmbienteRepositorio;
+
+if (! isset($_SESSION['logou']) || $_SESSION['logou'] != TRUE) {
+    header('Location: index.php');
+} else {
+    ?>
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Consulta Movimentação - CPC68</title>
+	<link rel="stylesheet" href="style.css"> <link rel="icon" type="image/png" href="favicon.png"> <script src="jquery-3.3.1.js"></script>
+</head>
+<body>
+
+
+
+
+
+<!-- NAV -->
+<?php include_once 'includes/nav.php';?>
+
+
+<!-- Side Menu -->
+<?php include_once 'includes/sideMenu.php';?>
+    
+    
+    <!-- Main -->
+	<div id="main">
+		<div class="mainContainer">
+        	<div class="mainConteudo">
+				<form action="consultarMovimentacao2.php" method="post">
+            		<div class="botoes">
+                		<a href="telaPrincipal.php" class="btVoltar"><img src="img/arrow_left.png" alt="">Voltar</a>
+                		<input type="hidden" name="idUnidade" value="<?php echo $_GET['idUnidade'];?>">
+            			<input type="text" name="pesquisa" size="60" placeholder="Pesquisar movimentação pelo tombamento do ativo" required> <button class="btPesquisar" type="submit" value="Pesquisar"><img alt="" src="img/magnifier.png"></button>
+                	</div>
+            		<p>
+            			<?php
+            			if ($_SESSION['resultado'] == 1){
+        				    if ($_SESSION['nivel'] == 1 || $_SESSION['nivel'] == 2) {
+        				    echo "<label class='resultado1'>Ativo não encontrado.</label>";
+        				    } else {
+        				    echo "<label class='resultado1'>Ativo não encontrado ou bloqueado.</label>";
+        				    }
+                            $_SESSION['resultado'] = -1;
+            			} else if ($_SESSION['resultado'] == 11){
+            			    echo "<label class='resultado2'>Ativo atualmente em Empréstimo.</label>";
+                            $_SESSION['resultado'] = -1;
+            			} else if ($_SESSION['resultado'] == 2){
+            			    echo "<label class='resultado2'>Ativo atualmente em Ass. Técnica.</label>";
+                            $_SESSION['resultado'] = -1;
+            			} else if ($_SESSION['resultado'] == 3){
+            			    echo "<label class='resultado2'>Ativo em Baixa.</label>";
+                            $_SESSION['resultado'] = -1;
+            			}
+        				?>
+            		</p>
+            	</form>
+            	<?php
+            	$idUnidade = $_GET['idUnidade'];
+            	$nomeUnidade = $_GET['nomeUnidade'];
+            	
+            	$Ambiente = new Ambiente();
+            	$AmbienteRepositorio = new AmbienteRepositorio();
+                $listaAmbiente = $AmbienteRepositorio->listarAmbientePorUnidadeDesbloqueado($idUnidade);
+                $quantidadeAmbiente = $AmbienteRepositorio->contarAmbienteDesbloqueadoPorUnidade($idUnidade);
+                ?>
+            	<table>
+            		<tr>
+            			<td colspan="4" style="color: #fca235; font-weight: bold; font-size:20px;"><a href="consultarMovimentacao.php">Unidades</a> > Ambientes de <?php echo $nomeUnidade;?></td>
+            		</tr>
+            		<tr> mostrar moviemntacoes do ambiente como ambiente origem
+            			<td style="color: #fca235; font-weight: bold;">Nome</td>
+            			<td style="color: #fca235; font-weight: bold;">Ambiente Origem &nbsp;<img style="padding:none; margin:none; position:absolute; width: 19px;" src="img/tooltip.png" alt="" title="*Ambiente origem: Ambiente original do ativo antes da movimentação.&#013;Mostrar movimentações do ambiente como Ambiente Origem."/></td>
+            			<td style="color: #fca235; font-weight: bold;">Ambiente Destino&nbsp;<img style="padding:none; margin:none; position:absolute; width: 19px;" src="img/tooltip.png" alt="" title="*Ambiente destino: Ambiente para onde o ativo é movimentado. (Dependendo do tipo de movimentação)&#013;Mostrar movimentações do ambiente como Ambiente Destino/></td>
+                        <td style="color: #fca235; font-weight: bold;">Descrição</td>
+                        <td style="color: #fca235; font-weight: bold;">Data de registro</td>
+            		</tr>
+            		<?php
+            		$c = 0;
+            		while ($c < $quantidadeAmbiente) {
+                        $Ambiente = $listaAmbiente[$c];
+                        echo "<tr>";
+                        echo "<td>&nbsp;" . $Ambiente->getNome() ."</td>";
+                        echo "<td> " .
+                             "<a style='margin-left: 12px; margin-right:12px;' href='consultarMovimentacao1-2.php?idUnidade=" . $idUnidade . "&idAmbiente=" . $Ambiente->getId() . "&nomeUnidade=" . $nomeUnidade . "&nomeAmbiente=" . $Ambiente->getNome() . "'><img alt='' src='img/arrow_up.png'>Origem</a>" .
+                             "<a style='margin-left: 12px; margin-right:12px;' href='consultarMovimentacao1-2.php?idUnidade=" . $idUnidade . "&idAmbiente=" . $Ambiente->getId() . "&nomeUnidade=" . $nomeUnidade . "&nomeAmbiente=" . $Ambiente->getNome() . "'><img alt='' src='img/arrow_down.png'>Destino</a>" .
+                             "</td>";
+                        echo "<td>&nbsp;" . $Ambiente->getDescricao() . "&nbsp;</td>";
+                        echo "<td>&nbsp;" . date('d/m/Y - H:i',strtotime($Ambiente->getDtRegistro())) . "&nbsp;</td>";
+                        echo "</tr>";
+                        $c++;
+            		}
+            		?>
+            	</table>
+			</div>
+		</div>
+	</div>
+	
+<!-- Footer -->
+<?php include_once 'includes/footer.php';?>
+
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
+<?php 
+}
+?>

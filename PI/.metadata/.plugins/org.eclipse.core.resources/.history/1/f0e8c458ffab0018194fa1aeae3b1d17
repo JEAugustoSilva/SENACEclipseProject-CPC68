@@ -1,0 +1,75 @@
+<?php
+session_start();
+include_once 'src/Grupo.php';
+include_once 'src/GrupoRepositorio.php';
+
+use src\Grupo;
+use src\GrupoRepositorio;
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CPC68</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<?php
+    $resultado = 9;
+    if ($_SERVER['REQUEST_METHOD'] == "GET") {
+        $nome = $_GET['nome'];
+        if ( isset($_GET['resultado'])) {
+        $resultado = $_GET['resultado'];
+        }
+    } else {
+        $nome = $_POST['nome'];
+    }
+    $Grupo = new Grupo();
+    $Grupo->setNome($nome);
+    $GrupoRepositorio = new GrupoRepositorio();
+    
+    if ($nome != "") {
+        $Grupo = $GrupoRepositorio->consultarGrupoPorNome($Grupo);
+    }
+    if ($Grupo->getDtRegistro() != null) {
+        $dateExp = explode('/', $Grupo->getDtRegistro());
+        $date = $dateExp[2] . "-" . $dateExp[1] . "-" . $dateExp[0];
+    }
+    if ($Grupo->getId() != "") {
+?>	
+	<form action="alterarGrupo3.php" method="post">
+		<table style="width: 100%" class="tabela">
+        	<tr>
+        		<td align="center"><label>Nome:</label> <input type="text" name="nome" value="<?php echo $Grupo->getNome();?>"></td>
+        	</tr>
+        	<tr>
+        		<td align="center"><label>Descrição:</label> <input type="text" name="descricao" value="<?php echo $Grupo->getDescricao();?>"></td>
+        	</tr>
+        	<tr>
+        		<td align="center"><label>Data de registro:</label> <input type="date" name="dtRegistro" value="<?php echo $date;?>"></td>
+        	</tr>
+        	<tr class="botoes">
+        		<td align="center">
+        			<input type="hidden" type="text" name="id" value="<?php echo $Grupo->getId();?>">
+        			
+        			<button class="btSalvar" type="submit"><img alt="" src="img/tick.png">Alterar</button>
+        			
+        			<a href="alterarGrupo.php" class="btVoltar"><img src="img/arrow_left.png" alt="">Voltar</a>
+        		</td>
+        	</tr>
+        	<tr>
+        		<td align="center">
+        			<?php if ($resultado == 0) {
+        			    echo "<label>Grupo alterado com sucesso!</label>";
+        			    $_SESSION['resultado'] = -1;
+        			} else if ($resultado == 1) {
+        			    echo "<label>Falha na alteração do grupo</label>";
+        			}?>
+        		</td>
+        	</tr>
+		</table>
+	</form>
+	<?php }?>
+</body>
+</html>

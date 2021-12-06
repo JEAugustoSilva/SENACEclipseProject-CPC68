@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="CallHierarchySearchScope">
+	</section>
+	<section name="PHPDLTKSearchPage">
+		<item value="5" key="HISTORY_SIZE"/>
+		<item value="false" key="CASE_SENSITIVE"/>
+		<section name="HISTORY4">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="modelElement"/>
+			<item value="0" key="scope"/>
+			<item value="&lt;!-- HEADER --&gt;" key="pattern"/>
+			<item value="1" key="limitTo"/>
+			<item value="false" key="includeInterpreterEnvironment"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY2">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="modelElement"/>
+			<item value="0" key="scope"/>
+			<item value="le=&quot;color: #fca235; font-weight: bold; font-size:30" key="pattern"/>
+			<item value="1" key="limitTo"/>
+			<item value="false" key="includeInterpreterEnvironment"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY3">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="modelElement"/>
+			<item value="0" key="scope"/>
+			<item value="&lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt; &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; href=&quot;favicon.png&quot;&gt;" key="pattern"/>
+			<item value="1" key="limitTo"/>
+			<item value="false" key="includeInterpreterEnvironment"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY0">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="modelElement"/>
+			<item value="0" key="scope"/>
+			<item value="alterarmovimentacao" key="pattern"/>
+			<item value="1" key="limitTo"/>
+			<item value="false" key="includeInterpreterEnvironment"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY1">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="modelElement"/>
+			<item value="0" key="scope"/>
+			<item value="color: #fca235; font-weight: bold; font-size:20" key="pattern"/>
+			<item value="1" key="limitTo"/>
+			<item value="false" key="includeInterpreterEnvironment"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
+	</section>
+</section>

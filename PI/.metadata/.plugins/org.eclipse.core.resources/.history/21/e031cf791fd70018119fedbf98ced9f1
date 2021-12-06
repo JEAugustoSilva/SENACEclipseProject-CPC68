@@ -1,0 +1,466 @@
+<?php
+namespace src;
+
+include_once 'Funcionario.php';
+include_once 'Cargo.php';
+include_once 'Unidade.php';
+include_once 'Conexao.php';
+
+class FuncionarioRepositorio
+{
+
+    private $Conexao;
+
+    public function __construct()
+    {
+        $this->Conexao = new Conexao();
+    }
+    
+    public function cadastrarFuncionario($Objeto) {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "INSERT INTO FUNCIONARIO(IDCARGO,IDCARGOSUPERIOR,IDUNIDADE,IDATORCADASTRO,NOME,EMAIL,TELEFONE,TURNO,NIVEL,DTREGISTRO,LOGIN,SENHA,SITUACAO) " .
+            "VALUES(" .
+            "    " . $Objeto->getCargo()->getId() .
+            ",   " . $Objeto->getCargoSuperior()->getId() .
+            ",   " . $Objeto->getUnidade()->getId() .
+            ",   " . $Objeto->getIdAtorCadastro() .
+            ",  '" . $Objeto->getNome() .
+            "', '" . $Objeto->getEmail() .
+            "', '" . $Objeto->getTelefone() .
+            "', '" . $Objeto->getTurno() .
+            "',  " . $Objeto->getNivel() .
+            " , NOW()" .
+            " , '" . $Objeto->getLogin() .
+            "', SHA('" . $Objeto->getSenha() .
+            "'), 0);")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no cadastro do funcionário. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function alterarFuncionario($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "UPDATE FUNCIONARIO SET" .
+            "   IDCARGO = " . $Objeto->getCargo()->getId() .
+            " , IDCARGOSUPERIOR = " . $Objeto->getCargoSuperior()->getId() .
+            " , IDUNIDADE = " . $Objeto->getUnidade()->getId() .
+            " , IDATORCADASTRO = " . $Objeto->getIdAtorCadastro() .
+            " , NOME = '" . $Objeto->getNome() .
+            "', EMAIL = '" . $Objeto->getEmail() .
+            "', TELEFONE = '" . $Objeto->getTelefone() .
+            "', TURNO = '" . $Objeto->getTurno() .
+            "', NIVEL = " . $Objeto->getNivel() .
+            "   WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha na alteração de cadastro do funcionário. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function validarLogin($Objeto) {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM FUNCIONARIO" .
+        " (WHERE SITUACAO = 0 OR SITUACAO = 9)" .
+        " AND BINARY LOGIN = '" . $Objeto->getLogin() .
+        "'  AND BINARY SENHA = SHA('" . $Objeto->getSenha() .
+        "');";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $retorno = TRUE;
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function autenticarFuncionario($Objeto) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT FUNCIONARIO.*, UNIDADE.NOME AS UNIDADENOME FROM FUNCIONARIO, UNIDADE" .
+            " WHERE (FUNCIONARIO.SITUACAO = 0 OR FUNCIONARIO.SITUACAO = 9)" .
+            " AND BINARY LOGIN = '" . $Objeto->getLogin() .
+            "' AND BINARY SENHA = SHA('" . $Objeto->getSenha() .
+            "') AND FUNCIONARIO.IDUNIDADE = UNIDADE.ID" .
+            ";";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Cargo = new Cargo();
+            $Cargo->setId($linha['IDCARGO']);
+            $Objeto->setCargo($Cargo);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Unidade->setNome($linha['UNIDADENOME']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setIdAtorCadastro($linha['IDATORCADASTRO']);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setTurno($linha['TURNO']);
+            $Objeto->setNivel($linha['NIVEL']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setLogin($linha['LOGIN']);
+            $Objeto->setSenha($linha['SENHA']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function bloquearFuncionario($Objeto) {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "UPDATE FUNCIONARIO SET" .
+            " SITUACAO = 1" .
+            " WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no bloqueio do funcionário. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function desbloquearFuncionario($Objeto) {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "UPDATE FUNCIONARIO SET" .
+            " SITUACAO = 0" .
+            " WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no bloqueio do funcionário. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function excluirFuncionario($Objeto) {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "DELETE FROM FUNCIONARIO" .
+            " WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no exclusão do funcionário. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function existeFuncionario($Objeto) {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query(
+            "SELECT * FROM FUNCIONARIO" .
+            " WHERE LOGIN = '" . $Objeto->getLogin() .
+            "' AND EMAIL = '" . $Objeto->getEmail() . 
+            "';"));
+        if ($numeroLinhas > 0) {
+            $retorno = TRUE;
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function consultarFuncionario($Objeto) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM FUNCIONARIO" .
+            " WHERE  NOME = '" . $Objeto->getNome() . "';";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Cargo = new Cargo();
+            $Cargo->setId($linha['IDCARGO']);
+            $Objeto->setCargo($Cargo);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setIdAtorCadastro($linha['IDATORCADASTRO']);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setTurno($linha['TURNO']);
+            $Objeto->setNivel($linha['NIVEL']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setLogin($linha['LOGIN']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function consultarFuncionarioPorId($Objeto) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM FUNCIONARIO" .
+            " WHERE  ID = " . $Objeto->getId() . ";";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Cargo = new Cargo();
+            $Cargo->setId($linha['IDCARGO']);
+            $Objeto->setCargo($Cargo);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setIdAtorCadastro($linha['IDATORCADASTRO']);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setEmail($linha['EMAIL']);
+            $Objeto->setTelefone($linha['TELEFONE']);
+            $Objeto->setTurno($linha['TURNO']);
+            $Objeto->setNivel($linha['NIVEL']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setLogin($linha['LOGIN']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function consultarFuncionarioPorNome($Objeto) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM FUNCIONARIO" .
+            " WHERE  NOME = '" . $Objeto->getNome() . 
+            "' AND SITUACAO = 0;";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Cargo = new Cargo();
+            $Cargo->setId($linha['IDCARGO']);
+            $Objeto->setCargo($Cargo);
+            $CargoSuperior = new Cargo();
+            $CargoSuperior->setId($linha['IDCARGOSUPERIOR']);
+            $Objeto->setCargoSuperior($CargoSuperior);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setIdAtorCadastro($linha['IDATORCADASTRO']);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setEmail($linha['EMAIL']);
+            $Objeto->setTelefone($linha['TELEFONE']);
+            $Objeto->setTurno($linha['TURNO']);
+            $Objeto->setNivel($linha['NIVEL']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setLogin($linha['LOGIN']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function consultarFuncionarioPorNomeBloqueado($Objeto) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM FUNCIONARIO" .
+            " WHERE  NOME = '" . $Objeto->getNome() .
+            "' AND SITUACAO = 1;";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Cargo = new Cargo();
+            $Cargo->setId($linha['IDCARGO']);
+            $Objeto->setCargo($Cargo);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setIdAtorCadastro($linha['IDATORCADASTRO']);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setEmail($linha['EMAIL']);
+            $Objeto->setTelefone($linha['TELEFONE']);
+            $Objeto->setTurno($linha['TURNO']);
+            $Objeto->setNivel($linha['NIVEL']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setLogin($linha['LOGIN']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function consultarFuncionarioPorIdAtorCadastro($idAtorCadastro) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM FUNCIONARIO" .
+            " WHERE  ID = " . $idAtorCadastro . ";";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto = new Funcionario();
+            $Objeto->setId($linha['ID']);
+            $Cargo = new Cargo();
+            $Cargo->setId($linha['IDCARGO']);
+            $Objeto->setCargo($Cargo);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setIdAtorCadastro($linha['IDATORCADASTRO']);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setEmail($linha['EMAIL']);
+            $Objeto->setTelefone($linha['TELEFONE']);
+            $Objeto->setTurno($linha['TURNO']);
+            $Objeto->setNivel($linha['NIVEL']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setLogin($linha['LOGIN']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function contarFuncionario() {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM FUNCIONARIO WHERE NOT SITUACAO = 9;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarFuncionarioDesbloqueado() {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM FUNCIONARIO WHERE SITUACAO = 0;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarFuncionarioBloqueado() {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM FUNCIONARIO WHERE SITUACAO = 1;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function listarFuncionario() {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT FUNCIONARIO.*, CARGO.NOME AS NOMECARGO FROM FUNCIONARIO, CARGO WHERE FUNCIONARIO.IDCARGO = CARGO.ID AND NOT FUNCIONARIO.SITUACAO = 9 ORDER BY FUNCIONARIO.NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Funcionario = new Funcionario();
+                $Funcionario->setId($linha['ID']);
+                $Cargo = new Cargo();
+                $Cargo->setId($linha['IDCARGO']);
+                $Cargo->setNome($linha['NOMECARGO']);
+                $Funcionario->setCargo($Cargo);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Funcionario->setUnidade($Unidade);
+                $Funcionario->setIdAtorCadastro($linha['IDATORCADASTRO']);
+                $Funcionario->setNome($linha['NOME']);
+                $Funcionario->setTurno($linha['TURNO']);
+                $Funcionario->setNivel($linha['NIVEL']);
+                $Funcionario->setDtRegistro($linha['DTREGISTRO']);
+                $Funcionario->setLogin($linha['LOGIN']);
+                $Funcionario->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Funcionario;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function listarFuncionarioDesbloqueado() {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT FUNCIONARIO.*, CARGO.NOME AS NOMECARGO FROM FUNCIONARIO, CARGO WHERE FUNCIONARIO.IDCARGO = CARGO.ID AND FUNCIONARIO.SITUACAO = 0 ORDER BY FUNCIONARIO.NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Funcionario = new Funcionario();
+                $Funcionario->setId($linha['ID']);
+                $Cargo = new Cargo();
+                $Cargo->setId($linha['IDCARGO']);
+                $Cargo->setNome($linha['NOMECARGO']);
+                $Funcionario->setCargo($Cargo);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Funcionario->setUnidade($Unidade);
+                $Funcionario->setIdAtorCadastro($linha['IDATORCADASTRO']);
+                $Funcionario->setNome($linha['NOME']);
+                $Funcionario->setTurno($linha['TURNO']);
+                $Funcionario->setNivel($linha['NIVEL']);
+                $Funcionario->setDtRegistro($linha['DTREGISTRO']);
+                $Funcionario->setLogin($linha['LOGIN']);
+                $Funcionario->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Funcionario;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function listarFuncionarioBloqueado() {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT FUNCIONARIO.*, CARGO.NOME AS NOMECARGO FROM FUNCIONARIO, CARGO WHERE FUNCIONARIO.IDCARGO = CARGO.ID AND FUNCIONARIO.SITUACAO = 1 ORDER BY FUNCIONARIO.NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Funcionario = new Funcionario();
+                $Funcionario->setId($linha['ID']);
+                $Cargo = new Cargo();
+                $Cargo->setId($linha['IDCARGO']);
+                $Cargo->setNome($linha['NOMECARGO']);
+                $Funcionario->setCargo($Cargo);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Funcionario->setUnidade($Unidade);
+                $Funcionario->setIdAtorCadastro($linha['IDATORCADASTRO']);
+                $Funcionario->setNome($linha['NOME']);
+                $Funcionario->setTurno($linha['TURNO']);
+                $Funcionario->setNivel($linha['NIVEL']);
+                $Funcionario->setDtRegistro($linha['DTREGISTRO']);
+                $Funcionario->setLogin($linha['LOGIN']);
+                $Funcionario->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Funcionario;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    
+}

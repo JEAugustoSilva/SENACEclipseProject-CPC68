@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="WorkbenchPreferenceDialogSettings">
+		<item value="150" key="DIALOG_X_ORIGIN"/>
+		<item value="144" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.preferences.keysPreferencePage">
+	</section>
+	<section name="org.eclipse.ui.internal.QuickAccess">
+		<item value="450" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_WIDTH"/>
+		<item value="506" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_HEIGHT"/>
+		<item value="false" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_USE_PERSISTED_LOCATION"/>
+		<item value="728" key="dialogHeight"/>
+		<item value="1124" key="dialogWidth"/>
+		<item value="true" key="org.eclipse.ui.internal.quickaccess.QuickAccessDialogDIALOG_USE_PERSISTED_SIZE"/>
+		<list key="textEntries">
+			<item value="2"/>
+		</list>
+		<list key="orderedElements">
+			<item value="org.eclipse.ui.newWizard(newWizardId=org.eclipse.php.ui.wizards.PHPFileCreationWizard)"/>
+		</list>
+		<list key="orderedProviders">
+			<item value="org.eclipse.ui.commands"/>
+		</list>
+		<list key="textArray">
+			<item value="new php"/>
+			<item value="e"/>
+		</list>
+	</section>
+	<section name="PreferencesImportWizard">
+		<item value="E:\ \I.T. Course\3 - Programming Module\Other\Eclipse Theme Base16 Tomorrow.epf" key=""/>
+		<list key="WizardPreferencesExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="E:\ \I.T. Course\3 - Programming Module\Other\Eclipse Theme Base16 Tomorrow.epf"/>
+			<item value="E:\ \I.T. Course\3 - Programming Module\Other\Eclipse Theme Solarized Light.epf"/>
+			<item value="C:\Users\Augusto\Desktop\Eclipse Theme Base16 Tomorrow.epf"/>
+			<item value="C:\Users\Emanuel Silva\Desktop\Eclipse Theme Solarized Light.epf"/>
+			<item value="C:\Users\Emanuel Silva\Desktop\theme-1263.epf"/>
+		</list>
+	</section>
+	<section name="NewWizardAction">
+	</section>
+	<section name="ImportExportAction">
+		<item value="org.eclipse.e4.ui.importer.wizard" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+	</section>
+	<section name="PreferencesExportWizard">
+		<item value="C:\Users\Emanuel Silva\Desktop\assasa.epf" key=""/>
+		<item value="false" key="WizardPreferencesExportPage1.STORE_OVERWRITE_EXISTING_FILES_ID"/>
+		<item value="true" key="WizardPreferencesExportPage1.EXPORT_ALL_PREFERENCES_ID"/>
+		<list key="WizardPreferencesExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="C:\Users\Emanuel Silva\Desktop\assasa.epf"/>
+		</list>
+	</section>
+</section>

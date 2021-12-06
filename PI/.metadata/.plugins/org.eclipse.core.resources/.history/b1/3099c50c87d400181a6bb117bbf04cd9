@@ -1,0 +1,458 @@
+<?php
+namespace src;
+
+include_once 'Conexao.php';
+include_once 'Ambiente.php';
+include_once 'Unidade.php';
+
+class AmbienteRepositorio
+{
+
+    private $Conexao;
+    
+    public function __construct()
+    {
+        $this->Conexao = new Conexao();
+    }
+    
+    public function cadastrarAmbiente($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "INSERT INTO AMBIENTE(IDUNIDADE,NOME,DESCRICAO,CODIGOBARRA,DTREGISTRO,SITUACAO) " .
+            "VALUES(" .
+            "    " . $Objeto->getUnidade()->getId() .
+            ",  '" . $Objeto->getNome() .
+            "', '" . $Objeto->getDescricao() .
+            "', '" . $Objeto->getCodigoBarra() .
+            "', NOW(), 0);")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no cadastro do ambiente. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function alterarAmbiente($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "UPDATE AMBIENTE SET" .
+            "   IDUNIDADE = " . $Objeto->getUnidade()->getId() .
+            ",  NOME = '" . $Objeto->getNome() .
+            "', CODIGOBARRA = '" . $Objeto->getCodigoBarra() .
+            "', DESCRICAO = '" . $Objeto->getDescricao() .
+            "' WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha na alteração do ambiente. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function bloquearAmbiente($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "UPDATE AMBIENTE SET" .
+            " SITUACAO = 1" .
+            " WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no bloqueio do ambiente. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function desbloquearAmbiente($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "UPDATE AMBIENTE SET" .
+            " SITUACAO = 0" .
+            " WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha no desbloqueio do ambiente. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function excluirAmbiente($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        if ($this->Conexao->getConexao()->query(
+            "DELETE FROM AMBIENTE" .
+            " WHERE ID = " . $Objeto->getId() . ";")) {
+            $retorno = TRUE;
+        } else {
+            echo "Falha na exclusão do ambiente. (REPOSITÓRIO)<br />";
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function existeAmbiente($Objeto)
+    {
+        $retorno = FALSE;
+        $this->Conexao->abrirConexao();
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query(
+            "SELECT * FROM AMBIENTE" .
+            " WHERE IDUNIDADE = " . $Objeto->getUnidade()->getId() .
+            " AND NOME = '" . $Objeto->getNome() . "';"));
+        if ($numeroLinhas > 0) {
+            $retorno = TRUE;
+        }
+        $this->Conexao->fecharConexao();
+        return $retorno;
+    }
+    
+    public function consultarAmbiente($Objeto) {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM AMBIENTE" .
+            " WHERE  NOME = '" . $Objeto->getNome() . "';";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setDescricao($linha['DESCRICAO']);
+            $Objeto->setCodigoBarra($linha['CODIGOBARRA']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function consultarAmbientePorNome($Objeto)
+    {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM AMBIENTE" .
+            " WHERE  NOME = '" . $Objeto->getNome() .
+            "' AND SITUACAO = 0;";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setDescricao($linha['DESCRICAO']);
+            $Objeto->setCodigoBarra($linha['CODIGOBARRA']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function consultarAmbientePorNomeBloqueado($Objeto)
+    {
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT * FROM AMBIENTE" .
+            " WHERE  NOME = '" . $Objeto->getNome() .
+            "' AND SITUACAO = 1;";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $Objeto->setId($linha['ID']);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $Objeto->setUnidade($Unidade);
+            $Objeto->setNome($linha['NOME']);
+            $Objeto->setDescricao($linha['DESCRICAO']);
+            $Objeto->setCodigoBarra($linha['CODIGOBARRA']);
+            $Objeto->setDtRegistro($linha['DTREGISTRO']);
+            $Objeto->setSituacao($linha['SITUACAO']);
+        }
+        $this->Conexao->fecharConexao();
+        return $Objeto;
+    }
+    
+    public function contarAmbiente() {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM AMBIENTE;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarAmbientePorUnidade($idUnidade) {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM AMBIENTE " .
+            "WHERE IDUNIDADE = " . $idUnidade . ";");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarAmbienteDesbloqueado() {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM AMBIENTE WHERE SITUACAO = 0;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarAmbienteDesbloqueadoPorUnidade($idUnidade) {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM AMBIENTE WHERE IDUNIDADE = " . $idUnidade . " AND SITUACAO = 0;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarAmbienteBloqueado() {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM AMBIENTE WHERE SITUACAO = 1;"
+            );
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function contarAmbienteBloqueadoPorUnidade($idUnidade) {
+        $quantidade = 0;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT COUNT(ID) AS QUANTIDADE FROM AMBIENTE " .
+            "WHERE IDUNIDADE = " . $idUnidade . " AND SITUACAO = 1;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($resultado);
+            $quantidade = $linha['QUANTIDADE'];
+        }
+        $this->Conexao->fecharConexao();
+        return $quantidade;
+    }
+    
+    public function listarAmbiente() {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT * FROM AMBIENTE ORDER BY NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Ambiente = new Ambiente();
+                $Ambiente->setId($linha['ID']);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Ambiente->setUnidade($Unidade);
+                $Ambiente->setNome($linha['NOME']);
+                $Ambiente->setDescricao($linha['DESCRICAO']);
+                $Ambiente->setCodigoBarra($linha['CODIGOBARRA']);
+                $Ambiente->setDtRegistro($linha['DTREGISTRO']);
+                $Ambiente->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Ambiente;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function listarAmbienteDesbloqueado() {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT * FROM AMBIENTE WHERE SITUACAO = 0 ORDER BY NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Ambiente = new Ambiente();
+                $Ambiente->setId($linha['ID']);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Ambiente->setUnidade($Unidade);
+                $Ambiente->setNome($linha['NOME']);
+                $Ambiente->setDescricao($linha['DESCRICAO']);
+                $Ambiente->setCodigoBarra($linha['CODIGOBARRA']);
+                $Ambiente->setDtRegistro($linha['DTREGISTRO']);
+                $Ambiente->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Ambiente;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function listarAmbienteDesbloqueadoPorUnidade($idUnidade) {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT A.*, U.NOME AS UNIDADENOME FROM AMBIENTE AS A, UNIDADE AS U WHERE A.IDUNIDADE = " . $idUnidade . " AND U.ID = " . $idUnidade . " AND A.SITUACAO = 0 ORDER BY NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Ambiente = new Ambiente();
+                $Ambiente->setId($linha['ID']);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Unidade->setNome($linha['UNIDADENOME']);
+                $Ambiente->setUnidade($Unidade);
+                $Ambiente->setNome($linha['NOME']);
+                $Ambiente->setDescricao($linha['DESCRICAO']);
+                $Ambiente->setCodigoBarra($linha['CODIGOBARRA']);
+                $Ambiente->setDtRegistro($linha['DTREGISTRO']);
+                $Ambiente->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Ambiente;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function listarAmbienteBloqueado() {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT * FROM AMBIENTE WHERE SITUACAO = 1 ORDER BY NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Ambiente = new Ambiente();
+                $Ambiente->setId($linha['ID']);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Ambiente->setUnidade($Unidade);
+                $Ambiente->setNome($linha['NOME']);
+                $Ambiente->setDescricao($linha['DESCRICAO']);
+                $Ambiente->setCodigoBarra($linha['CODIGOBARRA']);
+                $Ambiente->setDtRegistro($linha['DTREGISTRO']);
+                $Ambiente->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Ambiente;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function listarAmbientePorUnidade($idUnidade) {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT * FROM AMBIENTE WHERE IDUNIDADE = " . $idUnidade . " ORDER BY NOME;");
+            $numeroLinhas = mysqli_num_rows($resultado);
+            if ($numeroLinhas > 0) {
+                $c = 0;
+                while ($linha = mysqli_fetch_assoc($resultado)) {
+                    $Ambiente = new Ambiente();
+                    $Ambiente->setId($linha['ID']);
+                    $Unidade = new Unidade();
+                    $Unidade->setId($linha['IDUNIDADE']);
+                    $Ambiente->setUnidade($Unidade);
+                    $Ambiente->setNome($linha['NOME']);
+                    $Ambiente->setDescricao($linha['DESCRICAO']);
+                    $Ambiente->setCodigoBarra($linha['CODIGOBARRA']);
+                    $Ambiente->setDtRegistro($linha['DTREGISTRO']);
+                    $Ambiente->setSituacao($linha['SITUACAO']);
+                    $lista[$c] = $Ambiente;
+                    $c++;
+                }
+            }
+            $this->Conexao->fecharConexao();
+            return $lista;
+    }
+    
+    public function listarAmbientePorUnidadeDesbloqueado($idUnidade) {
+        $lista = null;
+        $this->Conexao->abrirConexao();
+        $resultado = $this->Conexao->getConexao()->query(
+            "SELECT * FROM AMBIENTE WHERE IDUNIDADE = " . $idUnidade . " AND SITUACAO = 0 ORDER BY NOME;");
+        $numeroLinhas = mysqli_num_rows($resultado);
+        if ($numeroLinhas > 0) {
+            $c = 0;
+            while ($linha = mysqli_fetch_assoc($resultado)) {
+                $Ambiente = new Ambiente();
+                $Ambiente->setId($linha['ID']);
+                $Unidade = new Unidade();
+                $Unidade->setId($linha['IDUNIDADE']);
+                $Ambiente->setUnidade($Unidade);
+                $Ambiente->setNome($linha['NOME']);
+                $Ambiente->setDescricao($linha['DESCRICAO']);
+                $Ambiente->setCodigoBarra($linha['CODIGOBARRA']);
+                $Ambiente->setDtRegistro($linha['DTREGISTRO']);
+                $Ambiente->setSituacao($linha['SITUACAO']);
+                $lista[$c] = $Ambiente;
+                $c++;
+            }
+        }
+        $this->Conexao->fecharConexao();
+        return $lista;
+    }
+    
+    public function consultarNomeAmbientePorId($id) { // PARA consultarMovimentacao1Origem.php
+        $this->Conexao->abrirConexao();
+        $codigoSQL = "SELECT NOME FROM AMBIENTE" .
+            " WHERE ID = " . $id . ";";
+        $numeroLinhas = mysqli_num_rows($this->Conexao->getConexao()->query($codigoSQL));
+        if ($numeroLinhas > 0) {
+            $linha = mysqli_fetch_assoc($this->Conexao->getConexao()->query($codigoSQL));
+            $AmbienteDestino = new Ambiente();
+            $AmbienteDestino->setId($linha['ID']);
+            $Unidade = new Unidade();
+            $Unidade->setId($linha['IDUNIDADE']);
+            $AmbienteDestino->setUnidade($Unidade);
+            $AmbienteDestino->setNome($linha['NOME']);
+            $AmbienteDestino->setDescricao($linha['DESCRICAO']);
+            $AmbienteDestino->setCodigoBarra($linha['CODIGOBARRA']  ;)
+        }
+        $this->Conexao->fecharConexao();
+        return $nomeAmbiente;
+    }
+}

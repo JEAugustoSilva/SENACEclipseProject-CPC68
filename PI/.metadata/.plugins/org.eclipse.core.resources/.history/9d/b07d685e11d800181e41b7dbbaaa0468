@@ -1,0 +1,66 @@
+<?php
+session_start();
+
+include_once 'src/Ativo.php';
+include_once 'src/AtivoRepositorio.php';
+include_once 'src/Movimentacao.php';
+include_once 'src/MovimentacaoRepositorio.php';
+include_once 'src/Ambiente.php';
+include_once 'src/AmbienteRepositorio.php';
+
+use src\Movimentacao;
+use src\MovimentacaoRepositorio;
+use src\AmbienteRepositorio;
+use src\Ambiente;
+
+
+
+if (! isset($_SESSION['logou']) || $_SESSION['logou'] != TRUE) {
+    header('Location: index.php');
+} else {
+    ?>
+<!doctype html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Home - CPC68</title>
+	<link rel="stylesheet" href="style.css"> <link rel="icon" type="image/png" href="favicon.png"> <script src="jquery-3.3.1.js"></script>
+</head>
+<body id="body">
+
+
+
+
+
+<!-- NAV -->
+<?php include_once 'includes/nav.php';?>
+
+
+<!-- Side Menu -->
+<?php include_once 'includes/sideMenu.php';?>
+    
+    
+    <!-- Main -->
+    <div id="main">
+    	<div class="mainContainer">
+    		<div class="mainConteudo">
+    			<table class="form">
+    				<tr>
+						<td colspan="7" style="height:10px; text-align: center; color: #fca235; font-weight: bold; font-size:20px;">About Page</td>
+    				</tr>
+    			</table>
+    		</div>
+    	</div>
+    </div>
+	
+<!-- Footer -->
+<?php include_once 'includes/footer.php';?>
+
+
+<!-- JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
+<?php 
+}
+?>

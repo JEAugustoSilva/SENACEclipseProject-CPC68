@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;SiteExemplo/src/SistemaExemplo QUERY.txt&apos; to &apos;SiteExemplo QUERY.txt&apos;" description="Rename resource &apos;SistemaExemplo QUERY.txt&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/SistemaExemplo QUERY.txt" name="SiteExemplo QUERY.txt" stamp="1534069719915" updateReferences="true"/>
+</session>
